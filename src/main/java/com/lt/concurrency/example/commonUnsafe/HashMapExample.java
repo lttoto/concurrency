@@ -1,27 +1,26 @@
 package com.lt.concurrency.example.commonUnsafe;
 
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
-
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
 /**
- * Created by taoshiliu on 2018/4/29.
- * jodaTime的DateTimeFormatter，线程安全
+ * Created by taoshiliu on 2018/4/30.
+ * HashMap线程不安全
  */
 @Slf4j
-public class DateFormatExample3 {
-    private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMdd");
+public class HashMapExample {
 
     public static int clinetTotal = 5000;
 
     public static int threadTotal = 200;
+
+    private static Map<Integer,Integer> map = new HashMap<>();
 
     public static void main(String[] args) throws Exception{
         ExecutorService executorService = Executors.newCachedThreadPool();
@@ -42,9 +41,10 @@ public class DateFormatExample3 {
         }
         countDownLatch.await();
         executorService.shutdown();
+        log.info("size: {}" ,map.size());
     }
 
     private static void update(int i) {
-        log.info("{},{}",i,DateTime.parse("20180208",dateTimeFormatter).toDate());
+        map.put(i,i);
     }
 }
